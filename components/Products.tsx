@@ -16,7 +16,11 @@ interface ProductItem {
 const ProductItem = ({ product }: ProductItem) => {
   return (
     <View className="mr-4 bg-light-2 p-2 rounded-lg">
-      <Image source={product.image} className="" />
+      <Image
+        source={product.image}
+        className=""
+        resizeMode="cover" // Ensures the image scales proportionally to fill the space
+      />
       <Text className="mt-2 text-lg font-normal">{product.name}</Text>
       <Text className="mt-2 text-xl font-semibold">${product.price}</Text>
     </View>

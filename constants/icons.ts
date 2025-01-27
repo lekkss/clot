@@ -7,6 +7,7 @@ import google from "@/assets/icons/google.png";
 import facebook from "@/assets/icons/facebook.png";
 import search from "@/assets/icons/search.png";
 import bag from "@/assets/icons/bag2.png";
+import bell from "@/assets/icons/bell.png";
 
 export default {
   home,
@@ -18,4 +19,5 @@ export default {
   facebook,
   search,
   bag,
+  bell,
 };

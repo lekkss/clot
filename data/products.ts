@@ -21,13 +21,13 @@ export const topSelling: ProductsPropType[] = [
     name: "Max Cirro Men's Slides",
     price: 55.0,
     discount: 50,
-    image: images.jacket,
+    image: images.slippers,
   },
   {
     id: 1,
     name: "Mens Cloth",
     price: 66.0,
     discount: 10,
-    image: images.jacket,
+    image: images.fleece,
   },
 ];

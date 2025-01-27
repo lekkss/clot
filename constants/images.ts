@@ -7,6 +7,12 @@ import shoe from "@/assets/images/shoe.png";
 import short from "@/assets/images/short.png";
 import jacket from "@/assets/images/jacket.png";
 import user from "@/assets/images/user.png";
+import slippers from "@/assets/images/slippers.png";
+import fleece from "@/assets/images/fleece-hoodie.png";
+import unscripted from "@/assets/images/nike-unscripted.png";
+import dye from "@/assets/images/dye.png";
+import pullover from "@/assets/images/pullover.png";
+import shirt from "@/assets/images/shirt.png";
 
 export default {
   clot,
@@ -18,4 +24,10 @@ export default {
   short,
   jacket,
   user,
+  slippers,
+  fleece,
+  unscripted,
+  dye,
+  shirt,
+  pullover,
 };
