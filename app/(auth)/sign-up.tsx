@@ -41,7 +41,7 @@ const SignIn2 = () => {
           />
           <Button
             onPress={() => {
-              router.push("/auth/email");
+              router.push("/(auth)/email");
             }}
             title="Continue"
             containerStyle="bg-primary-100 rounded-full"
@@ -50,7 +50,7 @@ const SignIn2 = () => {
           <Pressable className="pt-5">
             <Text
               className="font-semibold"
-              onPress={() => router.push("/(root)/auth/sign-in")}
+              onPress={() => router.push("/(auth)/sign-in")}
             >
               Already have an Account? Signin
             </Text>

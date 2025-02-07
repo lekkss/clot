@@ -29,13 +29,13 @@ const SignIn = () => {
           />
           <Button
             onPress={() => {
-              router.push("/auth/sign-in-2");
+              router.push("/(auth)/sign-in-2");
             }}
             title="Continue"
             containerStyle="bg-primary-100 rounded-full"
             textStyle="text-white font-semibold"
           />
-          <Pressable onPress={() => router.push("/auth/sign-up")}>
+          <Pressable onPress={() => router.push("/(auth)/sign-up")}>
             <Text className="font-semibold">
               {" "}
               Dont have an Account? Create One

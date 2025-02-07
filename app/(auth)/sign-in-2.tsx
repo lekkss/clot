@@ -20,7 +20,7 @@ const SignIn2 = () => {
           />
           <Button
             onPress={() => {
-              router.replace("/");
+              router.replace("/(tabs)/(home)");
             }}
             title="Continue"
             containerStyle="bg-primary-100 rounded-full"

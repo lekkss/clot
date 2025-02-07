@@ -15,7 +15,7 @@ const Email = () => {
         </Text>
         <Button
           onPress={() => {
-            router.replace("/auth/sign-in");
+            router.replace("/(auth)/sign-in");
           }}
           title="Return to Login"
           containerStyle="bg-primary-100 rounded-full w-fit"

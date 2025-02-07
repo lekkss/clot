@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Index() {
   useEffect(() => {
     setTimeout(() => {
-      router.replace("/auth/sign-in");
+      router.replace("/(auth)/sign-in");
     }, 300);
   });
   return (
