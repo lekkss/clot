@@ -12,7 +12,7 @@ const Categories = ({ id, image, name }: Category) => {
       <View className="size-24">
         <Image source={image} className="size-full" resizeMode="cover" />
       </View>
-      <Text className="text-lg">{name}</Text>
+      <Text className="text-lg capitalize">{name}</Text>
     </View>
   );
 };

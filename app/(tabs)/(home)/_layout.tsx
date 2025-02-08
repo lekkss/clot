@@ -12,6 +12,12 @@ const Layout = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="new-in"
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 };

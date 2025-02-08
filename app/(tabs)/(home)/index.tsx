@@ -14,6 +14,7 @@ import Products from "@/components/Products";
 import { topSelling } from "@/data/products";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
+import { router } from "expo-router";
 
 const Index = () => {
   const renderHeader = () => (
@@ -36,7 +37,7 @@ const Index = () => {
       <View>
         <View className="flex flex-row justify-between items-center mb-4">
           <Text className="font-semibold text-2xl">Categories</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.navigate("/categories")}>
             <Text className="text-2xl">See All</Text>
           </TouchableOpacity>
         </View>
