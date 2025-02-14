@@ -1,9 +1,9 @@
-import { View, Text, Image, TouchableOpacity, FlatList } from "react-native";
+import { View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
-import { categories } from "@/data/categories";
+import ShopCategories from "@/components/ShopCategories";
 
 const Categories = () => {
   return (
@@ -15,27 +15,7 @@ const Categories = () => {
         >
           <Image source={icons.arrow} resizeMode="cover" />
         </TouchableOpacity>
-        <Text className="text-black-100 font-bold text-3xl">
-          Shop by Categories
-        </Text>
-        <FlatList
-          data={categories}
-          renderItem={({ item }) => (
-            <TouchableOpacity className="flex flex-row items-center gap-5 bg-light-2 rounded-md p-3">
-              <View className="size-16 rounded-full">
-                <Image
-                  source={item.image}
-                  className="size-full"
-                  resizeMode="cover"
-                />
-              </View>
-              <Text className="text-black-100 text-xl capitalize">
-                {item.name}
-              </Text>
-            </TouchableOpacity>
-          )}
-          ItemSeparatorComponent={() => <View className="h-3"></View>}
-        />
+        <ShopCategories />
       </View>
     </SafeAreaView>
   );

@@ -13,16 +13,14 @@ interface ProductItem {
   product: ProductsPropType;
 }
 
-const ProductItem = ({ product }: ProductItem) => {
+export const ProductItem = ({ product }: ProductItem) => {
   return (
-    <View className="mr-4 bg-light-2 p-2 rounded-lg">
-      <Image
-        source={product.image}
-        className=""
-        resizeMode="cover" // Ensures the image scales proportionally to fill the space
-      />
-      <Text className="mt-2 text-lg font-normal">{product.name}</Text>
-      <Text className="mt-2 text-xl font-semibold">${product.price}</Text>
+    //some cards are wider than others so i want to make them the same width
+
+    <View className=" bg-light-2 p-2 rounded-lg">
+      <Image source={product.image} className="" resizeMode="cover" />
+      <Text className="mt-2 text-base font-normal">{product.name}</Text>
+      <Text className="mt-2 text-lg font-semibold">${product.price}</Text>
     </View>
   );
 };
@@ -33,7 +31,7 @@ const Products = ({ products, text, to }: Products) => {
       {/* Header for the section */}
       <View className="flex flex-row justify-between items-center mb-4">
         <Text className="font-semibold text-2xl">{text}</Text>
-        <TouchableOpacity onPress={() => router.push(to)}>
+        <TouchableOpacity onPress={() => router.push(to as any)}>
           <Text className="text-2xl text-blue-500">See All</Text>
         </TouchableOpacity>
       </View>
@@ -45,6 +43,7 @@ const Products = ({ products, text, to }: Products) => {
         renderItem={({ item }) => <ProductItem product={item} />}
         horizontal
         showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <View className="w-4" />}
       />
     </View>
   );

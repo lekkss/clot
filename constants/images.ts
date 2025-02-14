@@ -13,6 +13,7 @@ import unscripted from "@/assets/images/nike-unscripted.png";
 import dye from "@/assets/images/dye.png";
 import pullover from "@/assets/images/pullover.png";
 import shirt from "@/assets/images/shirt.png";
+import search from "@/assets/images/search.png";
 
 export default {
   clot,
@@ -30,4 +31,5 @@ export default {
   dye,
   shirt,
   pullover,
+  search,
 };

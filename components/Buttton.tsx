@@ -21,7 +21,7 @@ const Button = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={`rounded-2xl  p-5 ${containerStyle} ${
+      className={`rounded-2xl  p-3 px-5 ${containerStyle} ${
         loading ? "opacity-50" : ""
       }`} // Optional loading state
     >

@@ -28,10 +28,13 @@ const Index = () => {
         </View>
       </View>
       {/* Search Bar */}
-      <View className="bg-light-2 rounded-full p-5 flex flex-row items-center gap-4">
-        <Image source={icons.search} />
+      <TouchableOpacity
+        className="bg-light-2 rounded-[48px] p-3 flex flex-row items-center gap-4"
+        onPress={() => router.navigate("/search")}
+      >
+        <Image source={icons.search} className="ml-2" resizeMode="cover" />
         <TextInput placeholder="Search" />
-      </View>
+      </TouchableOpacity>
 
       {/* Categories Section */}
       <View>
