@@ -29,7 +29,7 @@ const Index = () => {
       </View>
       {/* Search Bar */}
       <TouchableOpacity
-        className="bg-light-2 rounded-[48px] p-3 flex flex-row items-center gap-4"
+        className="bg-light-2 rounded-[48px] p-4 flex flex-row items-center gap-4"
         onPress={() => router.navigate("/search")}
       >
         <Image source={icons.search} className="ml-2" resizeMode="cover" />

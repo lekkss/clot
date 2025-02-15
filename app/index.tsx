@@ -3,7 +3,6 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 export default function Index() {
   useEffect(() => {
     setTimeout(() => {
