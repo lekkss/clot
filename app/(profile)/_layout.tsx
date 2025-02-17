@@ -6,6 +6,7 @@ const ProfileLayout = () => {
     <Stack>
       <Stack.Screen name="address" options={{ headerShown: false }} />
       <Stack.Screen name="add-address" options={{ headerShown: false }} />
+      <Stack.Screen name="wishlist" options={{ headerShown: false }} />
     </Stack>
   );
 };

@@ -9,6 +9,8 @@ import search from "@/assets/icons/search.png";
 import bag from "@/assets/icons/bag2.png";
 import bell from "@/assets/icons/bell.png";
 import arrow from "@/assets/icons/arrow.png";
+import favorite from "@/assets/icons/fav-icon.png";
+import favoriteFilled from "@/assets/icons/fav-icon-fill.png";
 
 export default {
   home,
@@ -22,4 +24,6 @@ export default {
   bag,
   bell,
   arrow,
+  favorite,
+  favoriteFilled,
 };

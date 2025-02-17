@@ -14,6 +14,8 @@ import dye from "@/assets/images/dye.png";
 import pullover from "@/assets/images/pullover.png";
 import shirt from "@/assets/images/shirt.png";
 import search from "@/assets/images/search.png";
+import order from "@/assets/images/check-out.png";
+import cart from "@/assets/images/parcel.png";
 
 export default {
   clot,
@@ -32,4 +34,6 @@ export default {
   shirt,
   pullover,
   search,
+  order,
+  cart,
 };

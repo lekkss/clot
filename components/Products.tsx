@@ -2,11 +2,13 @@ import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { ProductsPropType } from "@/data/products";
 import { router } from "expo-router";
-
+import icons from "@/constants/icons";
+import { useFavorite } from "@/app/context/FavoriteContext";
+import FavoriteButton from "./FavoriteButton";
 interface Products {
   products: ProductsPropType[];
-  text: string; // Section header text (e.g., "Top Selling", "New In")
-  to: string; // Navigation route for "See All"
+  text: string;
+  to: string;
 }
 
 interface ProductItem {
@@ -14,13 +16,15 @@ interface ProductItem {
 }
 
 export const ProductItem = ({ product }: ProductItem) => {
+  const { addToFavorites } = useFavorite();
   return (
-    //some cards are wider than others so i want to make them the same width
-
-    <View className=" bg-light-2 p-2 rounded-lg">
-      <Image source={product.image} className="" resizeMode="cover" />
-      <Text className="mt-2 text-base font-normal">{product.name}</Text>
-      <Text className="mt-2 text-lg font-semibold">${product.price}</Text>
+    <View className="relative bg-light-2 p-2 rounded-lg">
+      <TouchableOpacity onPress={() => router.push(`/product/${product.id}`)}>
+        <Image source={product.image} className="" resizeMode="cover" />
+        <Text className="mt-2 text-base font-normal">{product.name}</Text>
+        <Text className="mt-2 text-lg font-semibold">${product.price}</Text>
+        <FavoriteButton product={product} />
+      </TouchableOpacity>
     </View>
   );
 };

@@ -15,6 +15,8 @@ import { topSelling } from "@/data/products";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
 import { router } from "expo-router";
+import Cart from "@/app/cart";
+import CartBadge from "@/components/CartBadge";
 
 const Index = () => {
   const renderHeader = () => (
@@ -23,9 +25,7 @@ const Index = () => {
         <View className="size-16 bg-gray-300 rounded-full flex items-center justify-center">
           <Image source={images.user} className="w-full" resizeMode="cover" />
         </View>
-        <View className="size-16 rounded-full bg-primary-100 flex items-center justify-center">
-          <Image source={icons.bag} className="w-5" resizeMode="cover" />
-        </View>
+        <CartBadge />
       </View>
       {/* Search Bar */}
       <TouchableOpacity

@@ -12,9 +12,9 @@ import icons from "@/constants/icons";
 import { router } from "expo-router";
 import ShopCategories from "@/components/ShopCategories";
 import { topSelling } from "@/data/products";
-import Products, { ProductItem } from "@/components/Products";
-import Button from "@/components/Buttton";
+import { ProductItem } from "@/components/Products";
 import images from "@/constants/images";
+import Empty from "@/components/Empty";
 
 const Search = () => {
   //when i start to search, filter through my products and display the products if not found, i want to render not found
@@ -68,7 +68,7 @@ const Search = () => {
           />
         ) : (
           <View className="flex items-center justify-center h-[calc(100vh-30vh)] gap-7 px-10">
-            <Image source={images.search} resizeMode="cover" />
+            {/* <Image source={images.search} resizeMode="cover" />
             <Text className="text-2xl  text-center">
               Sorry, we couldn't find any matching result for your search "
               {search}"
@@ -80,6 +80,10 @@ const Search = () => {
               title="Explore Categories"
               containerStyle="bg-primary-100 rounded-full"
               textStyle="text-white"
+            /> */}
+            <Empty
+              heading={`Sorry, we couldn't find any matching result for your search "${search}"`}
+              image={images.search}
             />
           </View>
         )}

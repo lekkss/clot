@@ -1,0 +1,126 @@
+import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Back from "@/components/Back";
+import { CartItemType, useCart } from "@/app/context/CartContext";
+import Empty from "@/components/Empty";
+import images from "@/constants/images";
+import Button from "@/components/Buttton";
+const Cart = () => {
+  const { items, removeAllItems } = useCart();
+  console.log(items);
+  const totalPrice = items.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+  const shipping = 10;
+  const tax = 10;
+  const total = totalPrice + shipping + tax;
+  return (
+    <SafeAreaView className="bg-white h-full px-4">
+      <View className="flex-1 bg-white flex flex-col gap-4">
+        <Back name={items.length > 0 ? "Cart" : ""} />
+        {items.length > 0 ? (
+          <View className="flex-1 bg-white flex flex-col gap-4 mt-4">
+            <TouchableOpacity
+              className="flex flex-row justify-end items-end"
+              onPress={() => {
+                removeAllItems();
+              }}
+            >
+              <Text className="text-primary-100">Remove All</Text>
+            </TouchableOpacity>
+            <FlatList
+              data={items}
+              renderItem={({ item }) => <CartItem item={item} />}
+              keyExtractor={(item) => item.id.toString()}
+              ItemSeparatorComponent={() => <View className="h-2 bg-light-2" />}
+              contentContainerStyle={{ gap: 10 }}
+              ListFooterComponent={() => (
+                <View className="gap-4 h-full flex justify-end ">
+                  <View className="flex flex-row justify-between items-center rounded-lg">
+                    <Text className="text-gray-500 text-lg">Subtotal</Text>
+                    <Text className="text-lg">${totalPrice.toFixed(2)}</Text>
+                  </View>
+                  <View className="flex flex-row justify-between items-center rounded-lg">
+                    <Text className="text-gray-500 text-lg">Shipping</Text>
+                    <Text className="text-lg">${shipping.toFixed(2)}</Text>
+                  </View>
+                  <View className="flex flex-row justify-between items-center rounded-lg">
+                    <Text className="text-gray-500 text-lg">Tax</Text>
+                    <Text className="text-lg">${tax.toFixed(2)}</Text>
+                  </View>
+                  <View className="flex flex-row justify-between items-center rounded-lg">
+                    <Text className=" text-lg">Total</Text>
+                    <Text className="font-semibold text-lg">
+                      ${total.toFixed(2)}
+                    </Text>
+                  </View>
+                </View>
+              )}
+            />
+            <Button
+              title="Checkout"
+              onPress={() => {}}
+              containerStyle="w-full bg-primary-100 rounded-full"
+              textStyle="text-white"
+            />
+          </View>
+        ) : (
+          <Empty heading="Your Cart is Empty" image={images.cart} />
+        )}
+      </View>
+    </SafeAreaView>
+  );
+};
+const CartItem = ({ item }: { item: CartItemType }) => {
+  const { increaseQuantity, decreaseQuantity } = useCart();
+  return (
+    <View className="flex flex-row justify-between items-center bg-light-2 rounded-lg p-4 h-24">
+      <View className="flex flex-row items-center gap-2">
+        <Image source={item.image} className="size-16" />
+        <View className="flex flex-col justify-between  h-full gap-2">
+          <Text>{item.name}</Text>
+          <View className="flex flex-row justify-between">
+            <Text className="text-gray-500">
+              Size -{" "}
+              <Text className="text-black-100 font-semibold capitalize">
+                {item.size}
+              </Text>
+            </Text>
+            <Text className="text-gray-500">
+              Color -{" "}
+              <Text className="text-black-100 font-semibold capitalize">
+                {item.color}
+              </Text>
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View className="flex flex-col items-end justify-between h-full gap-2">
+        <Text>
+          ${(item.price * item.quantity).toFixed(2)} (x{item.quantity})
+        </Text>
+        <View className="flex flex-row items-center gap-2">
+          <TouchableOpacity
+            className="bg-primary-100 rounded-full size-6 aspect-square flex items-center justify-center"
+            onPress={() => {
+              increaseQuantity(item.id);
+            }}
+          >
+            <Text className="text-white">+</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-primary-100 rounded-full size-6 aspect-square flex items-center justify-center"
+            onPress={() => {
+              decreaseQuantity(item.id);
+            }}
+          >
+            <Text className="text-white">-</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+};
+export default Cart;
