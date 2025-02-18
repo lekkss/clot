@@ -22,7 +22,7 @@ const Index = () => {
   const renderHeader = () => (
     <View className="gap-7">
       <View className="flex flex-row justify-between ">
-        <View className="size-16 bg-gray-300 rounded-full flex items-center justify-center">
+        <View className="size-14 bg-gray-300 rounded-full flex items-center justify-center">
           <Image source={images.user} className="w-full" resizeMode="cover" />
         </View>
         <CartBadge />

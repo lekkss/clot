@@ -1,4 +1,11 @@
-import React, { createContext, useReducer, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ProductsPropType } from "@/data/products";
 
 // Define Cart Item type
@@ -38,69 +45,90 @@ const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 const INCREASE_QUANTITY = "INCREASE_QUANTITY";
 const DECREASE_QUANTITY = "DECREASE_QUANTITY";
 const REMOVE_ALL_ITEMS = "REMOVE_ALL_ITEMS";
+const SET_CART = "SET_CART";
+
 // Define Action Types
 type CartAction =
   | { type: typeof ADD_TO_CART; payload: CartItemType }
   | { type: typeof REMOVE_FROM_CART; payload: number }
   | { type: typeof INCREASE_QUANTITY; payload: number }
   | { type: typeof DECREASE_QUANTITY; payload: number }
-  | { type: typeof REMOVE_ALL_ITEMS };
+  | { type: typeof REMOVE_ALL_ITEMS }
+  | { type: typeof SET_CART; payload: CartItemType[] };
+
+// AsyncStorage helper functions
+const CART_STORAGE_KEY = "cart_items";
+
+const saveCartToStorage = async (cartItems: CartItemType[]) => {
+  try {
+    await AsyncStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+  } catch (error) {
+    console.error("Error saving cart:", error);
+  }
+};
+
+const loadCartFromStorage = async (dispatch: React.Dispatch<CartAction>) => {
+  try {
+    const storedCart = await AsyncStorage.getItem(CART_STORAGE_KEY);
+    if (storedCart) {
+      dispatch({ type: SET_CART, payload: JSON.parse(storedCart) });
+    }
+  } catch (error) {
+    console.error("Error loading cart:", error);
+  }
+};
 
 // Reducer function
 const cartReducer = (state: CartState, action: CartAction): CartState => {
+  let updatedCart;
   switch (action.type) {
+    case SET_CART:
+      return { ...state, items: action.payload };
+
     case ADD_TO_CART:
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
       );
       if (existingItem) {
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        };
+        updatedCart = state.items.map((item) =>
+          item.id === action.payload.id
+            ? { ...item, quantity: item.quantity + action.payload.quantity }
+            : item
+        );
+      } else {
+        updatedCart = [...state.items, { ...action.payload }];
       }
-      return {
-        ...state,
-        items: [...state.items, { ...action.payload }],
-      };
+      saveCartToStorage(updatedCart);
+      return { ...state, items: updatedCart };
 
     case REMOVE_FROM_CART:
-      return {
-        ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
-      };
+      updatedCart = state.items.filter((item) => item.id !== action.payload);
+      saveCartToStorage(updatedCart);
+      return { ...state, items: updatedCart };
 
     case INCREASE_QUANTITY:
-      return {
-        ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        ),
-      };
+      updatedCart = state.items.map((item) =>
+        item.id === action.payload
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+      saveCartToStorage(updatedCart);
+      return { ...state, items: updatedCart };
 
     case DECREASE_QUANTITY:
-      return {
-        ...state,
-        items: state.items
-          .map((item) =>
-            item.id === action.payload
-              ? { ...item, quantity: item.quantity - 1 }
-              : item
-          )
-          .filter((item) => item.quantity > 0),
-      };
+      updatedCart = state.items
+        .map((item) =>
+          item.id === action.payload
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0);
+      saveCartToStorage(updatedCart);
+      return { ...state, items: updatedCart };
 
     case REMOVE_ALL_ITEMS:
-      return {
-        ...state,
-        items: [],
-      };
+      saveCartToStorage([]);
+      return { ...state, items: [] };
 
     default:
       return state;
@@ -119,14 +147,20 @@ interface CartProviderProps {
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
+  // Load cart from AsyncStorage on app start
+  useEffect(() => {
+    loadCartFromStorage(dispatch);
+  }, []);
+
   const addToCart = (
     product: ProductsPropType,
     size: string,
-    color: string
+    color: string,
+    quantity: number
   ) => {
     dispatch({
       type: ADD_TO_CART,
-      payload: { ...product, size, color, quantity: 1 },
+      payload: { ...product, size, color, quantity },
     });
   };
 

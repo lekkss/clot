@@ -11,6 +11,8 @@ import bell from "@/assets/icons/bell.png";
 import arrow from "@/assets/icons/arrow.png";
 import favorite from "@/assets/icons/fav-icon.png";
 import favoriteFilled from "@/assets/icons/fav-icon-fill.png";
+import x from "@/assets/icons/x.png";
+import coupon from "@/assets/icons/coupon.png";
 
 export default {
   home,
@@ -26,4 +28,6 @@ export default {
   arrow,
   favorite,
   favoriteFilled,
+  x,
+  coupon,
 };

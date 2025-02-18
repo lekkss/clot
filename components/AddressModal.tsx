@@ -2,9 +2,9 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { Dispatch, SetStateAction, useMemo } from "react";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
+import icons from "@/constants/icons";
 import { FlatList } from "react-native-gesture-handler";
 import { Sheet } from "./Sheet";
-import icons from "@/constants/icons";
 type PropType = {
   title: string;
   modalRef: React.RefObject<BottomSheetModalMethods>;
@@ -14,7 +14,7 @@ type PropType = {
   setSelectedFilter: Dispatch<SetStateAction<any>>;
 };
 
-const ColorFilterModal = ({
+const AddressModal = ({
   title,
   modalRef,
   closeFilterModal,
@@ -42,7 +42,7 @@ const ColorFilterModal = ({
           renderItem={({ item }) => (
             <TouchableOpacity
               key={item}
-              className={`flex-row items-center justify-between rounded-full p-5 ${
+              className={` flex-row items-start justify-between rounded-full p-5 ${
                 selectedFilter === item ? "bg-primary-100" : "bg-light-2"
               }`}
               onPress={() => {
@@ -51,20 +51,19 @@ const ColorFilterModal = ({
               }}
             >
               <Text
-                className={`capitalize text-lg ${
+                className={`text-lg ${
                   selectedFilter === item ? "text-white" : "text-black"
                 }`}
               >
-                {item}
+                {item.street}
               </Text>
-              <View
-                className={`size-6 rounded-full ${
-                  selectedFilter === item ? "border-2 border-white" : ""
+              <Text
+                className={`text-lg ${
+                  selectedFilter === item ? "text-white" : "text-black"
                 }`}
-                style={{
-                  backgroundColor: item,
-                }}
-              />
+              >
+                {item.state}
+              </Text>
             </TouchableOpacity>
           )}
           contentContainerStyle={{
@@ -77,4 +76,4 @@ const ColorFilterModal = ({
   );
 };
 
-export default ColorFilterModal;
+export default AddressModal;

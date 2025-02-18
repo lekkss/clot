@@ -6,29 +6,24 @@ import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
 import { topSelling } from "@/data/products";
 import ColorFilterModal from "@/components/ColorFIlterModal";
-import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import SizeFilterModal from "@/components/SizeModal";
 import { useCart } from "@/app/context/CartContext";
+import { useSheetRef } from "@/components/Sheet";
+import FavoriteButton from "@/components/FavoriteButton";
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
   const { addToCart } = useCart();
   const product = topSelling.find((product) => product.id === Number(id));
-  console.log(product);
-
   const [quantity, setQuantity] = useState(1);
 
   const [color, setColor] = useState(product?.colors[0]);
   const [size, setSize] = useState(product?.sizes[0]);
 
-  const colorModalRef = useRef<BottomSheetModalMethods>(null);
-  const sizeModalRef = useRef<BottomSheetModalMethods>(null);
+  const colorModalRef = useSheetRef();
+  const sizeModalRef = useSheetRef();
   const closeFilterModal = () => {
     colorModalRef.current?.dismiss();
     sizeModalRef.current?.dismiss();
-  };
-  const [isFavorite, setIsFavorite] = useState(false);
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
   };
   const handleAddToCart = () => {
     console.log("add to cart");
@@ -37,6 +32,7 @@ const ProductDetails = () => {
     }
     router.navigate("/cart");
   };
+
   return (
     // <SafeAreaView className="bg-white h-full">
     //   <View className="flex-1 bg-white flex-col gap-4  p-4">
@@ -76,15 +72,9 @@ const ProductDetails = () => {
         >
           <Image source={icons.arrow} resizeMode="cover" />
         </TouchableOpacity>
-        <TouchableOpacity
-          className="size-14 bg-light-2 rounded-full flex items-center justify-center"
-          onPress={toggleFavorite}
-        >
-          <Image
-            source={isFavorite ? icons.favoriteFilled : icons.favorite}
-            resizeMode="cover"
-          />
-        </TouchableOpacity>
+        <View className="size-14 bg-light-2 rounded-full flex items-center justify-center">
+          <FavoriteButton product={product!} />
+        </View>
       </View>
       <FlatList
         data={[]}
@@ -92,7 +82,7 @@ const ProductDetails = () => {
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={
           <FlatList
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+            data={[1, 2, 3, 4]}
             renderItem={({ item }) => (
               <Image source={product?.image} resizeMode="cover" />
             )}
@@ -103,18 +93,22 @@ const ProductDetails = () => {
         }
         contentContainerStyle={{ gap: 10 }}
         ListFooterComponent={
-          <View className="flex flex-col gap-2 flex-1">
-            <Text className="text-2xl font-semibold">{product?.name}</Text>
-            <Text className="text-lg font-semibold">${product?.price}</Text>
-
-            <View className="flex-col gap-2 py-4">
+          <View className="flex flex-col gap-2 flex-1 pb-8">
+            <Text className="text-xl font-semibold">{product?.name}</Text>
+            <Text className="text-lg font-semibold text-primary-100">
+              ${product?.price}
+            </Text>
+            {/* buttons */}
+            <View className="flex-col gap-4 py-4">
               <TouchableOpacity
-                className="flex flex-row justify-between items-center rounded-full bg-light-2 p-4"
+                className="flex flex-row justify-between items-center rounded-full bg-light-2 p-5"
                 onPress={() => sizeModalRef.current?.present()}
               >
-                <Text className="text-lg font-semibold">Size</Text>
+                <Text className="text-lg">Size</Text>
                 <View className="flex flex-row items-center gap-4">
-                  <Text className="text-lg font-semibold">{size}</Text>
+                  <Text className="text-lg font-semibold uppercase">
+                    {size}
+                  </Text>
                   <Image
                     source={icons.arrow}
                     resizeMode="cover"
@@ -123,10 +117,10 @@ const ProductDetails = () => {
                 </View>
               </TouchableOpacity>
               <TouchableOpacity
-                className="flex flex-row justify-between items-center rounded-full bg-light-2 p-4"
+                className="flex flex-row justify-between items-center rounded-full bg-light-2 p-5"
                 onPress={() => colorModalRef.current?.present()}
               >
-                <Text className="text-lg font-semibold">Color</Text>
+                <Text className="text-lg">Color</Text>
                 <View className="flex flex-row items-center gap-4">
                   <View
                     className="size-4 rounded-full"
@@ -141,7 +135,7 @@ const ProductDetails = () => {
                   />
                 </View>
               </TouchableOpacity>
-              <View className="flex flex-row justify-between items-center rounded-full bg-light-2 p-3">
+              <View className="flex flex-row justify-between items-center rounded-full bg-light-2 p-4">
                 <Text className="text-lg">Quantity</Text>
                 <View className="flex flex-row items-center gap-4">
                   <TouchableOpacity

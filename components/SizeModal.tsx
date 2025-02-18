@@ -1,7 +1,9 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { Dispatch, SetStateAction, useMemo } from "react";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetView } from "@gorhom/bottom-sheet";
+import { Sheet } from "./Sheet";
+import icons from "@/constants/icons";
 type PropType = {
   title: string;
   modalRef: React.RefObject<BottomSheetModalMethods>;
@@ -20,35 +22,44 @@ const SizeFilterModal = ({
   setSelectedFilter,
 }: PropType) => {
   const snapPoints = useMemo(() => ["50%"], []);
+
   return (
-    <BottomSheetModal
-      ref={modalRef}
-      index={0}
-      snapPoints={snapPoints}
-      enableDynamicSizing
-    >
-      <BottomSheetView className="flex-1 rounded-t-2xl">
-        <View className="relative flex-row justify-between items-center p-4">
-          <Text className="text-lg text-center w-full font-semibold">
+    <Sheet ref={modalRef} snapPoints={snapPoints}>
+      <BottomSheetView className="flex-1 rounded-t-2xl  pb-8">
+        <View className="relative -mt-5 flex-row justify-between items-center p-4">
+          <Text className="text-2xl text-center w-full font-semibold">
             {title}
           </Text>
           <TouchableOpacity
             className="absolute right-4"
             onPress={closeFilterModal}
           >
-            <Text className="text-lg font-semibold">X</Text>
+            <Image source={icons.x} className="size-6" />
           </TouchableOpacity>
         </View>
-        <View className="flex-col gap-2 p-4">
+        <View className="flex-col gap-4 p-4">
           {filters.map((filter: any) => (
             <TouchableOpacity
               key={filter}
-              className={`flex-row items-center justify-between rounded-full p-4 ${
-                selectedFilter === filter ? "bg-primary-100" : "bg-light-2"
+              className={`flex-row items-center justify-between rounded-full p-5 ${
+                selectedFilter.toLowerCase() === filter.toLowerCase()
+                  ? "bg-primary-100"
+                  : "bg-light-2"
               }`}
-              onPress={() => setSelectedFilter(filter)}
+              onPress={() => {
+                setSelectedFilter(filter);
+                closeFilterModal();
+              }}
             >
-              <Text className="capitalize">{filter}</Text>
+              <Text
+                className={`capitalize text-lg ${
+                  selectedFilter.toLowerCase() === filter.toLowerCase()
+                    ? "text-white"
+                    : "text-black"
+                }`}
+              >
+                {filter}
+              </Text>
               <View
                 className="w-4 h-4 rounded-full"
                 style={{
@@ -59,7 +70,7 @@ const SizeFilterModal = ({
           ))}
         </View>
       </BottomSheetView>
-    </BottomSheetModal>
+    </Sheet>
   );
 };
 

@@ -7,13 +7,13 @@ const CartBadge = () => {
   const { items } = useCart();
   return (
     <TouchableOpacity
-      className="size-16 rounded-full bg-primary-100 flex items-center justify-center"
+      className="relative size-14 rounded-full bg-primary-100 flex items-center justify-center"
       onPress={() => router.navigate("/cart")}
     >
       <Image source={icons.bag} className="w-5" resizeMode="cover" />
       {items.length > 0 && (
-        <View className="absolute -top-2 -right-2 bg-white rounded-full px-2">
-          <Text className="text-xs font-semibold">{items.length}</Text>
+        <View className="absolute top-2 right-1  px-2">
+          <Text className="text text-white font-semibold">{items.length}</Text>
         </View>
       )}
     </TouchableOpacity>

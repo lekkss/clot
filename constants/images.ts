@@ -16,6 +16,7 @@ import shirt from "@/assets/images/shirt.png";
 import search from "@/assets/images/search.png";
 import order from "@/assets/images/check-out.png";
 import cart from "@/assets/images/parcel.png";
+import placed from "@/assets/images/placed.png";
 
 export default {
   clot,
@@ -36,4 +37,5 @@ export default {
   search,
   order,
   cart,
+  placed,
 };

@@ -1,7 +1,14 @@
-import React, { createContext, useReducer, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useReducer,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Define Address type
-interface Address {
+export interface Address {
   id: number;
   street: string;
   city: string;
@@ -19,31 +26,14 @@ interface AddressContextType extends AddressState {
   addAddress: (address: Omit<Address, "id">) => void;
 }
 
-// Initial state
-const initialState: AddressState = {
-  addresses: [
-    {
-      id: 1,
-      street: "123 Main St",
-      city: "New York",
-      state: "NY",
-      zip: "10001",
-    },
-    {
-      id: 2,
-      street: "456 Main St",
-      city: "Los Angeles",
-      state: "CA",
-      zip: "90038",
-    },
-  ],
-};
-
 // Actions
 const ADD_ADDRESS = "ADD_ADDRESS";
+const SET_ADDRESSES = "SET_ADDRESSES";
 
 // Define Action Type
-type AddressAction = { type: typeof ADD_ADDRESS; payload: Address };
+type AddressAction =
+  | { type: typeof ADD_ADDRESS; payload: Address }
+  | { type: typeof SET_ADDRESSES; payload: Address[] };
 
 // Reducer function
 const addressReducer = (
@@ -52,9 +42,24 @@ const addressReducer = (
 ): AddressState => {
   switch (action.type) {
     case ADD_ADDRESS:
-      return { ...state, addresses: [...state.addresses, action.payload] };
+      const newAddresses = [...state.addresses, action.payload];
+      saveAddressesToStorage(newAddresses);
+      return { addresses: newAddresses };
+
+    case SET_ADDRESSES:
+      return { addresses: action.payload };
+
     default:
       return state;
+  }
+};
+
+// Save to AsyncStorage
+const saveAddressesToStorage = async (addresses: Address[]) => {
+  try {
+    await AsyncStorage.setItem("addresses", JSON.stringify(addresses));
+  } catch (error) {
+    console.error("Error saving addresses:", error);
   }
 };
 
@@ -70,7 +75,26 @@ interface AddressProviderProps {
 export const AddressProvider: React.FC<AddressProviderProps> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(addressReducer, initialState);
+  const [state, dispatch] = useReducer(addressReducer, { addresses: [] });
+
+  // Load addresses from AsyncStorage when app starts
+  useEffect(() => {
+    const loadAddresses = async () => {
+      try {
+        const storedAddresses = await AsyncStorage.getItem("addresses");
+        if (storedAddresses) {
+          dispatch({
+            type: SET_ADDRESSES,
+            payload: JSON.parse(storedAddresses),
+          });
+        }
+      } catch (error) {
+        console.error("Error loading addresses:", error);
+      }
+    };
+
+    loadAddresses();
+  }, []);
 
   // Function to add a new address
   const addAddress = (newAddress: Omit<Address, "id">) => {
