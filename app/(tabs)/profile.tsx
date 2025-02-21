@@ -26,7 +26,7 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
         <View className="flex flex-col gap-2 mt-4 w-full">
-          {["Address", "Wishlist", "Payment", "Helo", "Support"].map(
+          {["Address", "Wishlist", "Payment", "Help", "Support"].map(
             (item, index) => (
               <TouchableOpacity
                 key={index}

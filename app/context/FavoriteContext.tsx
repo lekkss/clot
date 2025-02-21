@@ -6,16 +6,15 @@ import React, {
   useEffect,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProductsPropType } from "@/data/products";
-
+import { Product } from "@/app/api/types";
 // Define Context State Type
 interface FavoriteState {
-  items: ProductsPropType[];
+  items: Product[];
 }
 
 // Define Context Value Type
 interface FavoriteContextType extends FavoriteState {
-  addToFavorites: (product: ProductsPropType) => void;
+  addToFavorites: (product: Product) => void;
   removeFromFavorites: (productId: number) => void;
 }
 
@@ -31,9 +30,9 @@ const SET_FAVORITES = "SET_FAVORITES";
 
 // Define Action Types
 type FavoriteAction =
-  | { type: typeof ADD_TO_FAVORITES; payload: ProductsPropType }
+  | { type: typeof ADD_TO_FAVORITES; payload: Product }
   | { type: typeof REMOVE_FROM_FAVORITES; payload: number }
-  | { type: typeof SET_FAVORITES; payload: ProductsPropType[] };
+  | { type: typeof SET_FAVORITES; payload: Product[] };
 
 // Reducer function
 const favoriteReducer = (
@@ -67,7 +66,7 @@ const favoriteReducer = (
 // AsyncStorage helper functions
 const FAVORITES_STORAGE_KEY = "favorites";
 
-const saveFavoritesToStorage = async (favorites: ProductsPropType[]) => {
+const saveFavoritesToStorage = async (favorites: Product[]) => {
   try {
     await AsyncStorage.setItem(
       FAVORITES_STORAGE_KEY,
@@ -112,7 +111,7 @@ export const FavoriteProvider: React.FC<FavoriteProviderProps> = ({
     loadFavoritesFromStorage(dispatch);
   }, []);
 
-  const addToFavorites = (product: ProductsPropType) => {
+  const addToFavorites = (product: Product) => {
     dispatch({ type: ADD_TO_FAVORITES, payload: product });
   };
 

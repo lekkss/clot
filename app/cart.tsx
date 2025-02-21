@@ -123,10 +123,14 @@ const CartItem = ({ item }: { item: CartItemType }) => {
   return (
     <View className="flex flex-row justify-between items-center bg-light-2 rounded-lg p-4 h-24">
       <View className="flex flex-row items-center gap-2">
-        <Image source={item.image} className="size-16" />
+        <Image
+          source={{ uri: item.thumbnail }}
+          className="size-16"
+          resizeMode="cover"
+        />
         <View className="flex flex-col justify-between  h-full gap-2">
-          <Text>{item.name}</Text>
-          <View className="flex flex-row justify-between">
+          <Text>{item.title}</Text>
+          {/* <View className="flex flex-row justify-between">
             <Text className="text-gray-500">
               Size -{" "}
               <Text className="text-black-100 font-semibold capitalize">
@@ -139,7 +143,7 @@ const CartItem = ({ item }: { item: CartItemType }) => {
                 {item.color}
               </Text>
             </Text>
-          </View>
+          </View> */}
         </View>
       </View>
       <View className="flex flex-col items-end justify-between h-full gap-2">
@@ -150,18 +154,18 @@ const CartItem = ({ item }: { item: CartItemType }) => {
           <TouchableOpacity
             className="bg-primary-100 rounded-full size-6 aspect-square flex items-center justify-center"
             onPress={() => {
-              increaseQuantity(item.id);
-            }}
-          >
-            <Text className="text-white">+</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-primary-100 rounded-full size-6 aspect-square flex items-center justify-center"
-            onPress={() => {
               decreaseQuantity(item.id);
             }}
           >
             <Text className="text-white">-</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-primary-100 rounded-full size-6 aspect-square flex items-center justify-center"
+            onPress={() => {
+              increaseQuantity(item.id);
+            }}
+          >
+            <Text className="text-white">+</Text>
           </TouchableOpacity>
         </View>
       </View>

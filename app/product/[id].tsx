@@ -1,23 +1,24 @@
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-import { topSelling } from "@/data/products";
 import ColorFilterModal from "@/components/ColorFIlterModal";
 import SizeFilterModal from "@/components/SizeModal";
 import { useCart } from "@/app/context/CartContext";
 import { useSheetRef } from "@/components/Sheet";
 import FavoriteButton from "@/components/FavoriteButton";
+import { useProduct } from "@/app/context/ProductContext";
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
   const { addToCart } = useCart();
-  const product = topSelling.find((product) => product.id === Number(id));
+  const { products } = useProduct();
+  const product = products.find((product) => product.id === Number(id));
   const [quantity, setQuantity] = useState(1);
 
-  const [color, setColor] = useState(product?.colors[0]);
-  const [size, setSize] = useState(product?.sizes[0]);
+  //   const [color, setColor] = useState(product?.colors[0]);
+  //   const [size, setSize] = useState(product?.sizes[0]);
 
   const colorModalRef = useSheetRef();
   const sizeModalRef = useSheetRef();
@@ -27,12 +28,14 @@ const ProductDetails = () => {
   };
   const handleAddToCart = () => {
     console.log("add to cart");
-    if (product && size && color) {
-      addToCart(product, size, color, quantity);
+    if (product) {
+      addToCart(product, quantity);
     }
     router.navigate("/cart");
   };
-
+  const getMainPrice = (price: number, discountPercentage: number) => {
+    return (price + (discountPercentage / 100) * price).toFixed(2);
+  };
   return (
     // <SafeAreaView className="bg-white h-full">
     //   <View className="flex-1 bg-white flex-col gap-4  p-4">
@@ -82,9 +85,15 @@ const ProductDetails = () => {
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={
           <FlatList
-            data={[1, 2, 3, 4]}
+            data={product?.images}
             renderItem={({ item }) => (
-              <Image source={product?.image} resizeMode="cover" />
+              <View className="bg-gray-100 w-52 h-52">
+                <Image
+                  source={{ uri: item }}
+                  resizeMode="cover"
+                  className="size-full rounded-lg"
+                />
+              </View>
             )}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -94,13 +103,20 @@ const ProductDetails = () => {
         contentContainerStyle={{ gap: 10 }}
         ListFooterComponent={
           <View className="flex flex-col gap-2 flex-1 pb-8">
-            <Text className="text-xl font-semibold">{product?.name}</Text>
-            <Text className="text-lg font-semibold text-primary-100">
-              ${product?.price}
-            </Text>
+            <Text className="text-xl font-semibold">{product?.title}</Text>
+            <View className="flex flex-row gap-2 items-center">
+              <Text className="text-lg font-semibold text-primary-100">
+                ${product?.price}
+              </Text>
+              {product?.discountPercentage && (
+                <Text className="text-sm text-gray-500 line-through">
+                  ${getMainPrice(product!.price, product!.discountPercentage)}
+                </Text>
+              )}
+            </View>
             {/* buttons */}
             <View className="flex-col gap-4 py-4">
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 className="flex flex-row justify-between items-center rounded-full bg-light-2 p-5"
                 onPress={() => sizeModalRef.current?.present()}
               >
@@ -134,7 +150,7 @@ const ProductDetails = () => {
                     className="size-4 rotate-[270deg]"
                   />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <View className="flex flex-row justify-between items-center rounded-full bg-light-2 p-4">
                 <Text className="text-lg">Quantity</Text>
                 <View className="flex flex-row items-center gap-4">
@@ -179,7 +195,7 @@ const ProductDetails = () => {
         </Text>
         <Text className="text-white text-lg font">Add to Bag</Text>
       </TouchableOpacity>
-      <ColorFilterModal
+      {/* <ColorFilterModal
         title="Color"
         modalRef={colorModalRef}
         closeFilterModal={closeFilterModal}
@@ -194,7 +210,7 @@ const ProductDetails = () => {
         filters={product?.sizes}
         selectedFilter={size}
         setSelectedFilter={setSize}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

@@ -3,9 +3,10 @@ import React from "react";
 import { ProductsPropType } from "@/data/products";
 import { useFavorite } from "@/app/context/FavoriteContext";
 import icons from "@/constants/icons";
+import { Product } from "@/app/api/types";
 
 interface FavoriteButtonProps {
-  product: ProductsPropType;
+  product: Product;
 }
 
 const FavoriteButton = ({ product }: FavoriteButtonProps) => {

@@ -6,22 +6,25 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
 import ShopCategories from "@/components/ShopCategories";
-import { topSelling } from "@/data/products";
 import { ProductItem } from "@/components/Products";
 import images from "@/constants/images";
 import Empty from "@/components/Empty";
-
+import { useProduct } from "@/app/context/ProductContext";
+import { Product } from "./api/types";
 const Search = () => {
-  //when i start to search, filter through my products and display the products if not found, i want to render not found
   const [search, setSearch] = useState("");
-  const filteredProducts = topSelling.filter((product) =>
-    product.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const { searchProducts } = useProduct();
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    searchProducts(search).then((res) => {
+      setFilteredProducts(res);
+    });
+  }, [search]);
 
   return (
     <SafeAreaView className="flex-1 bg-white p-3">
@@ -68,19 +71,6 @@ const Search = () => {
           />
         ) : (
           <View className="flex items-center justify-center h-[calc(100vh-30vh)] gap-7 px-10">
-            {/* <Image source={images.search} resizeMode="cover" />
-            <Text className="text-2xl  text-center">
-              Sorry, we couldn't find any matching result for your search "
-              {search}"
-            </Text>
-            <Button
-              onPress={() => {
-                router.push("/categories");
-              }}
-              title="Explore Categories"
-              containerStyle="bg-primary-100 rounded-full"
-              textStyle="text-white"
-            /> */}
             <Empty
               heading={`Sorry, we couldn't find any matching result for your search "${search}"`}
               image={images.search}

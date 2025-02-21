@@ -6,13 +6,13 @@ import React, {
   useEffect,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProductsPropType } from "@/data/products";
+import { Product } from "../api/types";
 
 // Define Cart Item type
-export interface CartItemType extends ProductsPropType {
+export interface CartItemType extends Product {
   quantity: number;
-  size: string;
-  color: string;
+  //   size: string;
+  //   color: string;
 }
 
 // Define Context State Type
@@ -23,9 +23,9 @@ interface CartState {
 // Define Context Value Type
 interface CartContextType extends CartState {
   addToCart: (
-    product: ProductsPropType,
-    size: string,
-    color: string,
+    product: Product,
+    // size: string,
+    // color: string,
     quantity: number
   ) => void;
   removeFromCart: (productId: number) => void;
@@ -153,14 +153,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   }, []);
 
   const addToCart = (
-    product: ProductsPropType,
-    size: string,
-    color: string,
+    product: Product,
+    // size: string,
+    // color: string,
     quantity: number
   ) => {
     dispatch({
       type: ADD_TO_CART,
-      payload: { ...product, size, color, quantity },
+      payload: { ...product, quantity },
     });
   };
 
