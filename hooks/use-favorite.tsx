@@ -1,5 +1,5 @@
 import { useLocalStorage } from "./use-localstorage";
-import { Product } from "../api/types";
+import { Product } from "../app/api/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 export function useFavorite() {
   const [favorites, setFavorites] = useLocalStorage<Product[]>("favorites", []);
@@ -14,7 +14,6 @@ export function useFavorite() {
       }
       // Assuming you want to store favorites in localStorage
       const updatedFavorites = [...favorites, product];
-      console.log(updatedFavorites, "updatedFavorites");
 
       setFavorites(updatedFavorites);
       return updatedFavorites; // Return the updated list
@@ -28,7 +27,9 @@ export function useFavorite() {
 
   const removeFromFavorites = useMutation({
     mutationFn: async (product: Product) => {
-      setFavorites((prev) => prev.filter((p) => p.id !== product.id));
+      setFavorites((prev) =>
+        prev ? prev.filter((p) => p.id !== product.id) : []
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["favorites"] });

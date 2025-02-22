@@ -5,7 +5,7 @@ import Back from "@/components/Back";
 import { ProductItem } from "@/components/Products";
 import icons from "@/constants/icons";
 import Empty from "@/components/Empty";
-import { useFavorite } from "../hooks/use-favorite";
+import { useFavorite } from "../../hooks/use-favorite";
 const Wishlist = () => {
   const { favorites: items } = useFavorite();
 

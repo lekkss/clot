@@ -4,11 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-import { useCart } from "@/app/context/CartContext";
+import { useCart } from "@/hooks/use-cart";
 // import { useSheetRef } from "@/components/Sheet";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useProductByIdQuery } from "@/hooks/use-product";
 import Loading from "@/components/Loading";
+import { Review } from "../api/types";
+import AntDesign from "@expo/vector-icons/AntDesign";
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
   const { addToCart } = useCart();
@@ -147,6 +149,23 @@ const ProductDetails = () => {
             <Text className="text-sm text-gray-500">
               Free standard shipping and free 60-day returns
             </Text>
+            {product?.reviews.length > 0 && (
+              <View className="flex flex-col gap-4 mt-2">
+                <Text className="text-lg font-semibold">Reviews</Text>
+                <Text className="text-3xl font-bold">
+                  {product?.rating} Ratings
+                </Text>
+                <Text className="text-sm text-gray-500">
+                  {product?.reviews.length} Reviews
+                </Text>
+                <FlatList
+                  data={product?.reviews}
+                  renderItem={({ item }) => <ReviewCard review={item} />}
+
+                  //   keyExtractor={(item) => item}
+                />
+              </View>
+            )}
           </View>
         }
       />
@@ -180,3 +199,36 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
+const ReviewCard = ({ review }: { review: Review }) => {
+  const getRating = (rating: number) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <AntDesign
+        key={index}
+        name="star"
+        size={15}
+        color={index < rating ? "#8E6CEF" : "#E5E7EB"}
+      />
+    ));
+  };
+  return (
+    <View className="py-2">
+      <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-row items-center gap-2">
+          <Text className="text-lg font-semibold">{review.reviewerName}</Text>
+        </View>
+        <View className="flex flex-row items-center">
+          {getRating(review.rating)}
+        </View>
+      </View>
+      <Text className="text-sm text-gray-500">{review.comment}</Text>
+      <Text className="text-sm text-gray-500">
+        {new Date(review.date).toLocaleDateString(undefined, {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}
+      </Text>
+    </View>
+  );
+};

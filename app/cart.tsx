@@ -2,16 +2,16 @@ import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Back";
-import { CartItemType, useCart } from "@/app/context/CartContext";
 import Empty from "@/components/Empty";
 import images from "@/constants/images";
 import Button from "@/components/Buttton";
 import icons from "@/constants/icons";
 import FormField from "@/components/form/FormField";
 import { router } from "expo-router";
+import { CartItemType, useCart } from "../hooks/use-cart";
 const Cart = () => {
-  const { items, removeAllItems } = useCart();
-  const totalPrice = items.reduce(
+  const { cart, clearCart } = useCart();
+  const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
@@ -21,19 +21,19 @@ const Cart = () => {
   return (
     <SafeAreaView className="bg-white h-full px-4">
       <View className="flex-1 bg-white flex flex-col gap-4">
-        <Back name={items.length > 0 ? "Cart" : ""} />
-        {items.length > 0 ? (
+        <Back name={cart.length > 0 ? "Cart" : ""} />
+        {cart.length > 0 ? (
           <View className="flex-1 bg-white flex flex-col gap-4 mt-4">
             <TouchableOpacity
               className="flex flex-row justify-end items-end"
               onPress={() => {
-                removeAllItems();
+                clearCart();
               }}
             >
               <Text className="text-primary-100">Remove All</Text>
             </TouchableOpacity>
             <FlatList
-              data={items}
+              data={cart}
               renderItem={({ item }) => <CartItem item={item} />}
               keyExtractor={(item) => item.id.toString()}
               ItemSeparatorComponent={() => <View className="h-2 bg-light-2" />}

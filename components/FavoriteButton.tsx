@@ -2,7 +2,7 @@ import { TouchableOpacity, Image } from "react-native";
 import React from "react";
 import icons from "@/constants/icons";
 import { Product } from "@/app/api/types";
-import { useFavorite } from "@/app/hooks/use-favorite";
+import { useFavorite } from "@/hooks/use-favorite";
 
 interface FavoriteButtonProps {
   product: Product;
