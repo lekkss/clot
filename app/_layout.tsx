@@ -1,63 +1,49 @@
 import { Stack } from "expo-router";
 import "./global.css";
 import { AddressProvider } from "./context/AddressContext";
-import { FavoriteProvider } from "./context/FavoriteContext";
 import { CartProvider } from "./context/CartContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { StyleSheet } from "react-native";
-import { ProductProvider } from "./context/ProductContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <BottomSheetModalProvider>
-        <ProductProvider>
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView style={styles.container}>
+        <BottomSheetModalProvider>
           <AddressProvider>
-            <FavoriteProvider>
-              <CartProvider>
-                <Stack>
-                  <Stack.Screen name="index" options={{ headerShown: false }} />
-                  <Stack.Screen
-                    name="(auth)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="(tabs)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="categories"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="search"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="(profile)"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="product/[id]"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen name="cart" options={{ headerShown: false }} />
-                  <Stack.Screen
-                    name="checkout"
-                    options={{ headerShown: false }}
-                  />
-                  <Stack.Screen
-                    name="placed"
-                    options={{ headerShown: false }}
-                  />
-                </Stack>
-              </CartProvider>
-            </FavoriteProvider>
+            <CartProvider>
+              <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(categories)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="search" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(profile)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="product/[id]"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="cart" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="checkout"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="placed" options={{ headerShown: false }} />
+              </Stack>
+            </CartProvider>
           </AddressProvider>
-        </ProductProvider>
-      </BottomSheetModalProvider>
-    </GestureHandlerRootView>
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }
 

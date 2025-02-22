@@ -4,28 +4,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
-import ColorFilterModal from "@/components/ColorFIlterModal";
-import SizeFilterModal from "@/components/SizeModal";
 import { useCart } from "@/app/context/CartContext";
-import { useSheetRef } from "@/components/Sheet";
+// import { useSheetRef } from "@/components/Sheet";
 import FavoriteButton from "@/components/FavoriteButton";
-import { useProduct } from "@/app/context/ProductContext";
+import { useProductByIdQuery } from "@/hooks/use-product";
+import Loading from "@/components/Loading";
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
   const { addToCart } = useCart();
-  const { products } = useProduct();
-  const product = products.find((product) => product.id === Number(id));
+  const { data: product, isLoading } = useProductByIdQuery(Number(id));
   const [quantity, setQuantity] = useState(1);
 
   //   const [color, setColor] = useState(product?.colors[0]);
   //   const [size, setSize] = useState(product?.sizes[0]);
-
-  const colorModalRef = useSheetRef();
-  const sizeModalRef = useSheetRef();
-  const closeFilterModal = () => {
-    colorModalRef.current?.dismiss();
-    sizeModalRef.current?.dismiss();
-  };
+  if (isLoading) return <Loading />;
+  //   const colorModalRef = useSheetRef();
+  //   const sizeModalRef = useSheetRef();
   const handleAddToCart = () => {
     console.log("add to cart");
     if (product) {
@@ -37,36 +31,6 @@ const ProductDetails = () => {
     return (price + (discountPercentage / 100) * price).toFixed(2);
   };
   return (
-    // <SafeAreaView className="bg-white h-full">
-    //   <View className="flex-1 bg-white flex-col gap-4  p-4">
-    //     <View className="flex flex-row justify-between items-center">
-    //       <TouchableOpacity
-    //         className="size-14 bg-light-2 rounded-full flex items-center justify-center"
-    //         onPress={() => router.back()}
-    //       >
-    //         <Image source={icons.arrow} resizeMode="cover" />
-    //       </TouchableOpacity>
-    //       <TouchableOpacity className="size-14 bg-light-2 rounded-full flex items-center justify-center">
-    //         <Image source={icons.favorite} resizeMode="cover" />
-    //       </TouchableOpacity>
-    //     </View>
-    //     <FlatList
-    //       data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-    //       renderItem={({ item }) => (
-    //         <Image source={product?.image} resizeMode="cover" />
-    //       )}
-    //       horizontal
-    //       showsHorizontalScrollIndicator={false}
-    //       contentContainerStyle={{ gap: 10 }}
-    //       className="bg-red"
-    //     />
-    //     <View className="flex flex-col gap-2 flex-1 bg-red">
-    //       <Text className="text-2xl font-semibold">{product?.name}</Text>
-    //       <Text className="text-lg font-semibold">${product?.price}</Text>
-    //       <Text className="text-sm font-semibold">{product?.description}</Text>
-    //     </View>
-    //   </View>
-    // </SafeAreaView>
     <SafeAreaView className="bg-white h-full px-4">
       <View className="flex flex-row justify-between items-center mb-4">
         <TouchableOpacity

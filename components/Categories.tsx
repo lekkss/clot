@@ -7,10 +7,10 @@ interface Category {
   image?: any;
   name: string;
 }
-const Categories = ({ id, image, name }: Category) => {
+const Categories = ({ name }: Category) => {
   return (
     <TouchableOpacity
-      onPress={() => router.navigate(`/categories/${name}`)}
+      onPress={() => router.navigate(`/(categories)/${name}`)}
       className="flex gap-2 items-center m-1 rounded-lg bg-light-2 p-2"
     >
       {/* <View className="size-24"> */}

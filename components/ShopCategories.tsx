@@ -1,15 +1,12 @@
 import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import { useProduct } from "@/app/context/ProductContext";
+import { useCategoriesQuery } from "@/hooks/use-product";
 import { router } from "expo-router";
-import Animated, {
-  Extrapolation,
-  FadeInDown,
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
+import Loading from "./Loading";
 const ShopCategories = () => {
-  const { categories } = useProduct();
+  const { data: categories, isLoading } = useCategoriesQuery();
+  if (isLoading) return <Loading />;
   return (
     <View className="gap-4 mb-32">
       <Text className="text-black-100 font-bold text-xl">
@@ -24,7 +21,7 @@ const ShopCategories = () => {
               .damping(11)}
           >
             <TouchableOpacity
-              onPress={() => router.push(`/categories/${item.name}`)}
+              onPress={() => router.push(`/${item.name}`)}
               className="flex flex-row items-center gap-5 bg-light-2 rounded-xl p-3"
             >
               {/* <View className="size-16 rounded-full">

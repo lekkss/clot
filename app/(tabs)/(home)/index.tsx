@@ -9,27 +9,28 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeIn, FadeInDown } from "react-native-reanimated";
 import Categories from "@/components/Categories";
-import Products from "@/components/Products";
 import icons from "@/constants/icons";
 import images from "@/constants/images";
 import { router } from "expo-router";
 import CartBadge from "@/components/CartBadge";
-import { useProduct } from "@/app/context/ProductContext";
 import { ProductItem } from "@/components/Products";
 import Loading from "@/components/Loading";
+import { useProductQuery, useCategoriesQuery } from "@/hooks/use-product";
 const Index = () => {
-  let limit: number = 6;
+  const [limit, setLimit] = useState(6);
   const [refreshing, setRefreshing] = useState(false);
   const [isEndReached, setIsEndReached] = useState(false);
+  const productsQuery = useProductQuery(limit, 0);
+  const categoriesQuery = useCategoriesQuery();
   const onRefresh = () => {
     setRefreshing(true);
-    fetchProducts(limit, 0);
+    productsQuery.refetch();
     setRefreshing(false);
   };
-  const { products, loading, error, categories, fetchProducts } = useProduct();
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentHeight = event.nativeEvent.contentSize.height + 100;
@@ -41,16 +42,18 @@ const Index = () => {
         setIsEndReached(true);
         console.log("Reached bottom");
         //fetch more images
-        ++limit;
-        fetchProducts(limit, 0);
+        setLimit((prev) => prev + 6);
+        productsQuery.refetch();
+        console.log("limit", limit);
       }
     } else if (isEndReached) {
       setIsEndReached(false);
     }
   };
 
-  if (loading) return <Loading />;
-  if (error) return <Text>Error: {error}</Text>;
+  if (productsQuery.isLoading) return <Loading />;
+  if (productsQuery.error)
+    return <Text>Error: {productsQuery.error.message}</Text>;
 
   const renderHeader = () => (
     <View className="gap-7">
@@ -73,17 +76,19 @@ const Index = () => {
       <View>
         <View className="flex flex-row justify-between items-center mb-4">
           <Text className="font-semibold text-xl">Categories</Text>
-          <TouchableOpacity
-            onPress={() => router.navigate("/categories/categories")}
-          >
+          <TouchableOpacity onPress={() => router.navigate("/(categories)")}>
             <Text className="text-lg">See All</Text>
           </TouchableOpacity>
         </View>
         <FlatList
-          data={categories}
+          data={categoriesQuery.data}
           keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <Categories id={item.name} name={item.name} />
+          renderItem={({ item, index }) => (
+            <Animated.View
+              entering={FadeIn.delay(index * 100 + 100).springify()}
+            >
+              <Categories id={item.name} name={item.name} />
+            </Animated.View>
           )}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -92,29 +97,29 @@ const Index = () => {
     </View>
   );
 
-  const renderProducts = () => (
-    <View className="gap-2 mt-2 mb-20">
-      {/* Top Selling Section */}
-      {/* <Products products={products} text="Top Selling" to="top-selling" /> */}
-      {/* New In Section */}
-      <Products products={products} text="New In" to="new-in" />
-    </View>
-  );
-
   return (
-    <SafeAreaView className="bg-white h-full px-5">
+    <SafeAreaView className="bg-white h-full px-5 pb-20">
       <FlatList
-        data={products}
+        data={productsQuery.data?.products}
         keyExtractor={(item) => item.id.toString()}
         ListHeaderComponent={<View>{renderHeader()}</View>}
-        renderItem={({ item }) => (
-          <View className="w-1/2 flex-row">
-            <ProductItem product={item} />
-          </View>
+        renderItem={({ item, index }) => (
+          <Animated.View
+            entering={FadeInDown.delay(index * 100 + 100)
+              .springify()
+              .damping(11)}
+          >
+            <View className="w-1/2 flex-row">
+              <ProductItem product={item} />
+            </View>
+          </Animated.View>
         )}
         numColumns={2}
         columnWrapperStyle={{ gap: 8 }} // Add spacing between columns
-        contentContainerStyle={{ gap: 16 }} // Padding for entire grid
+        contentContainerStyle={{
+          gap: 16,
+          marginBottom: 100,
+        }} // Padding for entire grid
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

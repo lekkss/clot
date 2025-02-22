@@ -1,4 +1,4 @@
-import { API_CONFIG } from "./config";
+import API_CONFIG from "./config";
 
 class ProductApi {
   getProducts = async (limit: number, skip: number) => {

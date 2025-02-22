@@ -11,7 +11,7 @@ const Empty = ({ heading, image }: { heading: string; image: any }) => {
       <Text className="text-2xl font-semibold text-center">{heading}</Text>
       <Button
         onPress={() => {
-          router.push("/categories");
+          router.push("/(categories)");
         }}
         title="Explore Categories"
         containerStyle="bg-primary-100 rounded-full"

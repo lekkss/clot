@@ -6,7 +6,7 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import icons from "@/constants/icons";
 import { router } from "expo-router";
@@ -14,17 +14,21 @@ import ShopCategories from "@/components/ShopCategories";
 import { ProductItem } from "@/components/Products";
 import images from "@/constants/images";
 import Empty from "@/components/Empty";
-import { useProduct } from "@/app/context/ProductContext";
 import { Product } from "./api/types";
+import { useSearchProductsQuery } from "@/hooks/use-product";
+import Loading from "@/components/Loading";
 const Search = () => {
   const [search, setSearch] = useState("");
-  const { searchProducts } = useProduct();
+  const searchInputRef = useRef<TextInput>(null);
+  const searchProductsQuery = useSearchProductsQuery(search);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   useEffect(() => {
-    searchProducts(search).then((res) => {
-      setFilteredProducts(res);
-    });
-  }, [search]);
+    setFilteredProducts(searchProductsQuery.data?.products || []);
+  }, [searchProductsQuery.data]);
+
+  if (searchProductsQuery.isLoading) return <Loading />;
+  if (searchProductsQuery.error)
+    return <Text>Error: {searchProductsQuery.error.message}</Text>;
 
   return (
     <SafeAreaView className="flex-1 bg-white p-3">
@@ -39,6 +43,7 @@ const Search = () => {
           <View className="bg-light-2 flex-1  rounded-[48px] p-4 flex flex-row items-center gap-4">
             <Image source={icons.search} className="ml-2" resizeMode="cover" />
             <TextInput
+              ref={searchInputRef}
               placeholder="Search"
               value={search}
               onChangeText={setSearch}

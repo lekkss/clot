@@ -1,13 +1,16 @@
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import React from "react";
-import { useFavorite } from "@/app/context/FavoriteContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Back";
 import { ProductItem } from "@/components/Products";
 import icons from "@/constants/icons";
 import Empty from "@/components/Empty";
+import { useFavorite } from "../hooks/use-favorite";
 const Wishlist = () => {
-  const { items } = useFavorite();
+  const { favorites: items } = useFavorite();
+
+  console.log(items, "items");
+
   return (
     <SafeAreaView className="bg-white h-full">
       <View className="flex-1 bg-white flex-col gap-4  p-4">

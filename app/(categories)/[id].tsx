@@ -1,37 +1,32 @@
 import { View, Text, FlatList } from "react-native";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useLocalSearchParams } from "expo-router";
-import { useProduct } from "@/app/context/ProductContext";
-import { Product } from "../api/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Back";
 import { ProductItem } from "@/components/Products";
 import Loading from "@/components/Loading";
 import Empty from "@/components/Empty";
 import images from "@/constants/images";
+import { useProductByCategoryQuery } from "@/hooks/use-product";
 const SingleCategory = () => {
-  const { name } = useLocalSearchParams();
-  const { fetchProductsByCategory, loading } = useProduct();
-  const [products, setProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    fetchProductsByCategory(name as string).then((res) => {
-      setProducts(res);
-    });
-  }, [name]);
-  if (loading) return <Loading />;
+  const { id: name } = useLocalSearchParams();
+  const productQuery = useProductByCategoryQuery(name as string);
+  const { data: products, isLoading } = productQuery;
+
+  if (isLoading) return <Loading />;
 
   return (
     <SafeAreaView className="bg-white p-6 flex-1">
       <View className="gap-5 mb-20">
         <Back />
-        {products.length > 0 && (
+        {products.products.length > 0 && (
           <Text className="text-black-100 font-semibold text-lg">
-            {name} ({products.length || 0})
+            {name} ({products.products.length || 0})
           </Text>
         )}
 
         <FlatList
-          data={products}
+          data={products.products}
           renderItem={({ item }) => (
             <View className="w-1/2">
               <ProductItem product={item} />
