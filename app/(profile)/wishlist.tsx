@@ -9,8 +9,6 @@ import { useFavorite } from "../../hooks/use-favorite";
 const Wishlist = () => {
   const { favorites: items } = useFavorite();
 
-  console.log(items, "items");
-
   return (
     <SafeAreaView className="bg-white h-full">
       <View className="flex-1 bg-white flex-col gap-4  p-4">

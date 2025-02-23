@@ -3,16 +3,14 @@ import React, { useState, useRef } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Back from "@/components/Back";
 import icons from "@/constants/icons";
-import { useAddress, Address } from "./context/AddressContext";
+import { useAddress, Address } from "@/hooks/use-address";
 import AddressModal from "@/components/AddressModal";
 import { useSheetRef } from "@/components/Sheet";
-import Button from "@/components/Buttton";
 import { router } from "expo-router";
-import { useCheckout } from "./context/ChecoutContext";
 import { CartItemType, useCart } from "@/hooks/use-cart";
 const Checkout = () => {
   const addressModalRef = useSheetRef();
-  const { addresses } = useAddress();
+  const { address } = useAddress();
   const [selectedAddress, setSelectedAddress] = useState<Address | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"card" | "paypal">("card");
   const [cardDetails, setCardDetails] = useState<{
@@ -72,7 +70,7 @@ const Checkout = () => {
         title="Shipping Address"
         modalRef={addressModalRef}
         closeFilterModal={closeFilterModal}
-        filters={addresses}
+        filters={address}
         selectedFilter={selectedAddress}
         setSelectedFilter={setSelectedAddress}
       />

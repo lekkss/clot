@@ -16,9 +16,9 @@ const FavoriteButton = ({ product }: FavoriteButtonProps) => {
     <TouchableOpacity
       onPress={() => {
         if (isCurrentFavorite) {
-          removeFromFavorites.mutate(product);
+          removeFromFavorites(product);
         } else {
-          addToFavorites.mutate(product);
+          addToFavorites(product);
         }
       }}
       className="absolute top-3 right-3"

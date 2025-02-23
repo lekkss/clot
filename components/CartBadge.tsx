@@ -5,7 +5,6 @@ import { useCart } from "@/hooks/use-cart";
 import { router } from "expo-router";
 const CartBadge = () => {
   const { cart } = useCart();
-  console.log(cart, "cart");
   return (
     <TouchableOpacity
       className="relative size-14 rounded-full bg-primary-100 flex items-center justify-center"

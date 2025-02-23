@@ -1,14 +1,14 @@
 import Back from "@/components/Back";
 import { router } from "expo-router";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAddress } from "../context/AddressContext";
+import { useAddress } from "@/hooks/use-address";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Address = () => {
-  const { addresses } = useAddress();
-  useFocusEffect(useCallback(() => {}, [addresses]));
+  const { address } = useAddress();
+  useFocusEffect(useCallback(() => {}, [address]));
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -16,12 +16,15 @@ const Address = () => {
         <Back name="Address" />
         <View className="flex-1 bg-white flex flex-col gap-4 mt-5">
           <View className="flex-1 bg-white flex flex-col gap-4  ">
-            {addresses.map((address) => (
+            {address.map((address) => (
               <View
                 key={address.id}
                 className="flex-row justify-between items-center gap-2 rounded-lg p-4 py-5 bg-light-2"
               >
-                <Text className="text-base max-w-[70%] truncate">
+                <Text
+                  className="text-base max-w-[70%] truncate"
+                  numberOfLines={1}
+                >
                   {`${address.street} ${address.city}, ${address.state} ${address.zip}`}
                 </Text>
                 <TouchableOpacity>

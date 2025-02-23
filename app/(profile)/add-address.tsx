@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/form/FormField";
 import { router } from "expo-router";
-import { useAddress } from "../context/AddressContext";
+import { useAddress } from "@/hooks/use-address";
 
 const AddAddress = () => {
   const { addAddress } = useAddress();
@@ -33,7 +33,10 @@ const AddAddress = () => {
       newAddress.state &&
       newAddress.zip
     ) {
-      addAddress(newAddress);
+      addAddress({
+        ...newAddress,
+        id: Date.now(),
+      });
       router.back();
     }
   };

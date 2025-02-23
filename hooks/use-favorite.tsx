@@ -1,49 +1,68 @@
-import { useLocalStorage } from "./use-localstorage";
 import { Product } from "../app/api/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-export function useFavorite() {
-  const [favorites, setFavorites] = useLocalStorage<Product[]>("favorites", []);
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const FAVORITE_QUERY_KEY = ["favorites"];
+
+export function useFavorite() {
+  const FAVORITE_STORAGE_KEY = "favorites";
   const queryClient = useQueryClient();
 
-  const addToFavorites = useMutation({
-    mutationFn: async (product: Product) => {
-      const isExist = favorites.some((p) => p.id === product.id);
-      if (isExist) {
-        return;
-      }
-      // Assuming you want to store favorites in localStorage
-      const updatedFavorites = [...favorites, product];
-
-      setFavorites(updatedFavorites);
-      return updatedFavorites; // Return the updated list
-    },
-    onSuccess: (updatedFavorites) => {
-      if (updatedFavorites) {
-        setFavorites(updatedFavorites);
+  // Load cart from AsyncStorage
+  const { data: favorites = [] } = useQuery({
+    queryKey: FAVORITE_QUERY_KEY,
+    queryFn: async (): Promise<Product[]> => {
+      try {
+        const storedFavorites = await AsyncStorage.getItem(
+          FAVORITE_STORAGE_KEY
+        );
+        return storedFavorites ? JSON.parse(storedFavorites) : [];
+      } catch (error) {
+        console.error("Error loading favorites:", error);
+        return [];
       }
     },
+    staleTime: Infinity, // Keeps cart cached
   });
 
-  const removeFromFavorites = useMutation({
-    mutationFn: async (product: Product) => {
-      setFavorites((prev) =>
-        prev ? prev.filter((p) => p.id !== product.id) : []
+  // Mutation to update cart
+  const updateFavoritesMutation = useMutation({
+    mutationFn: async (newFavorites: Product[]) => {
+      await AsyncStorage.setItem(
+        FAVORITE_STORAGE_KEY,
+        JSON.stringify(newFavorites)
       );
+      return newFavorites;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
+    onSuccess: (newFavorites) => {
+      queryClient.setQueryData(FAVORITE_QUERY_KEY, newFavorites);
     },
   });
 
-  const clearFavorites = useMutation({
-    mutationFn: async () => {
-      setFavorites([]);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favorites"] });
-    },
-  });
+  const addToFavorites = (product: Product) => {
+    const isExist = favorites.some((p) => p.id === product.id);
+    if (isExist) {
+      return;
+    }
+    const updatedFavorites = [...favorites, product];
+    updateFavoritesMutation.mutate(updatedFavorites);
+  };
+
+  const removeFromFavorites = (product: Product) => {
+    const updatedFavorites = favorites.filter((p) => p.id !== product.id);
+    updateFavoritesMutation.mutate(updatedFavorites);
+  };
+
+  const clearFavorites = () => {
+    updateFavoritesMutation.mutate([]);
+    async () => {
+      try {
+        await AsyncStorage.removeItem(FAVORITE_STORAGE_KEY);
+      } catch (error) {
+        console.error("Error clearing favorites:", error);
+      }
+    };
+  };
 
   return {
     favorites,
