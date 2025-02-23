@@ -18,6 +18,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 # Screenshots
 
-![alt text](gif1.gif)
-
-![alt text](gif2.gif)
+<div style="display: flex; justify-content: space-between;">
+  <img src="gif1.gif" alt="alt text" width="45%"/>
+  <img src="gif2.gif" alt="alt text" width="45%"/>
+</div>
