@@ -6,10 +6,10 @@ import icons from "@/constants/icons";
 import { useAddress, Address } from "./context/AddressContext";
 import AddressModal from "@/components/AddressModal";
 import { useSheetRef } from "@/components/Sheet";
-import { useCart } from "./context/CartContext";
 import Button from "@/components/Buttton";
 import { router } from "expo-router";
 import { useCheckout } from "./context/ChecoutContext";
+import { CartItemType, useCart } from "@/hooks/use-cart";
 const Checkout = () => {
   const addressModalRef = useSheetRef();
   const { addresses } = useAddress();
@@ -29,10 +29,10 @@ const Checkout = () => {
   const closeFilterModal = () => {
     addressModalRef.current?.dismiss();
   };
-  const { items, removeAllItems } = useCart();
+  const { cart, clearCart } = useCart();
   // const { completeCheckout } = useCheckout();
-  const totalPrice = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const totalPrice = cart.reduce(
+    (acc: number, item: CartItemType) => acc + item.price * item.quantity,
     0
   );
   const shipping = 10;
@@ -43,7 +43,7 @@ const Checkout = () => {
     if (selectedAddress == null) {
       addressModalRef.current?.present();
     } else {
-      removeAllItems();
+      clearCart();
       router.replace("/placed");
     }
   };

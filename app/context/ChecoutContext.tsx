@@ -6,8 +6,8 @@ import React, {
   useEffect,
 } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CartItemType } from "./CartContext"; // Import cart item type
 import { Address } from "./AddressContext";
+import { CartItemType } from "@/hooks/use-cart";
 // Define Checkout State Type
 interface CheckoutState {
   cartItems: CartItemType[];
